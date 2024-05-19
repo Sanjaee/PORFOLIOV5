@@ -1,7 +1,27 @@
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import Style from "../Styles/Loader.module.css";
 
 const Loader = () => {
+  const [windowWidth, setWindowWidth] = useState(0);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    // Set initial window width when component is mounted
+    setWindowWidth(window.innerWidth);
+
+    // Add event listener to update window width when window is resized
+    window.addEventListener("resize", handleResize);
+
+    // Clean up event listener when component is unmounted
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []); // useEffect only runs once when component is mounted
+
   return (
     <motion.section
       initial={{ y: 0, opacity: 1 }}
@@ -10,7 +30,7 @@ const Loader = () => {
         opacity: 1,
         transition: { duration: 1, delay: 2 },
       }}
-      exit={{ y: window.innerWidth }}
+      exit={{ y: windowWidth }} // Use windowWidth that has been set
       className={Style.loader}
     >
       <div className={Style.loader__container}>
